@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Consuming a Deferred";
+}
+
+@Html.ActionLink("Back to main page", "Index")
+
+<h2>Consuming a Deferred</h2>
+<span>
+    The most common scenario for using Deferreds is in calling $.ajax.  $.ajax returns a Promise, which is a 
+    readonly Deferred.  You can use the returned Promise to listen for the responses.
+</span>
+<div id="container">
+    <h4>Messages</h4>
+    <div id="messages" title="Messages sent by the code will apear here.">
+    </div>
+    
+    <!-- The "code" below is only for display.  To see the real code look in the js files -->
+
+    <div id="controls" >
+        <input id="makeRequest" title="Make an AJAX request to the server and wire up event handlers" type="button" value="Make request" />
+        <div class="code">
+            <code class="prettyprint">
+                //Make an ajax request...this is a demo so we know it will take 10 seconds to respond. <br />
+                // $.ajax returns a jQuery Promise. <br />
+                requestPromise = $.ajax({ <br />
+                &nbsp; url: '/home/DelayService',<br />
+                &nbsp; type: 'POST'<br />
+                });<br />
+                <br />
+                //Attach an event handler to the promise. <br />
+                requestPromise.done(function (data) { <br />
+                &nbsp; writeMessage('server says: ' + data.status); <br />
+                });<br />
+            </code>
+        </div>
+        
+        <br />
+        <br />
+        <input id="attachToRequest" title="Wire up another event handler" type="button" value="Attach to Request" />
+        <div class="code">
+            <code class="prettyprint">
+                //Attach another handler when the button is clicked.  <br />
+                //But this will only work if the request has been made already.  <br />
+                requestPromise.done(function (data) { <br />
+                &nbsp;                     writeMessage('secret code is: ' + data.secretCode); <br />
+                }); <br />
+            </code>
+        </div>
+    </div>
+
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/Pages/Consuming.js"></script>    
+}

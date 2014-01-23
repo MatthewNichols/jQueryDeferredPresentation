@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "Grouping Async calls using $.when";
+}
+
+@Html.ActionLink("Back to main page", "Index")
+
+<h2>Grouping Async calls using $.when</h2>
+
+<span>
+    
+</span>
+
+<div id="container">
+    
+    <h4>Messages</h4>
+    <div id="messages" title="Messages sent by the code will apear here.">
+    </div>
+    
+    <!-- The "code" below is only for display.  To see the real code look in the js files -->
+
+    <div id="controls">
+        <div><b>Setup code</b></div>
+        <div class="code">
+            <code class="prettyprint">
+                //Create a couple of Deferreds that we will resolve with button clicks <br />
+                var deferred1 = $.Deferred(); <br />
+                var deferred2 = $.Deferred(); <br />
+
+                //Make an ajax request that will return in 10 seconds. <br />
+                var deferred3 = $.ajax({ <br />
+                &nbsp; url: '/home/DelayService', <br />
+                &nbsp; type: 'POST' <br />
+                }); <br />
+
+                //Attach a handler to the ajax call so we can see when it comes back <br />
+                deferred3.done(function (data, statusText, jqXhr) { <br />
+                &nbsp; writeMessage("Ajax Call returned"); <br />
+                }); <br />
+
+                //Create a new Deferred that will wait for all 3 <br />
+                var grouped = $.when(deferred1, deferred2, deferred3); <br />
+
+                //Display when ALL of them complete successfully <br />
+                grouped.done(function(d1, d2, d3) { <br />
+                &nbsp; writeMessage("deferred1 returned " + d1); <br />
+                &nbsp; writeMessage("deferred2 returned " + d2); <br />
+                <br />
+                &nbsp; //deferred3 is an ajax request so it returns [data, statusText, jqXhr]. <br />
+                &nbsp; //pull out the data we care about <br />
+                &nbsp; var d3Data = d3[0]; <br />
+                &nbsp; var d3StatusText = d3[1]; <br />
+                &nbsp; writeMessage("deferred3 returned " + d3Data.secretCode + "  + statusText: " + d3StatusText); <br />
+                }); <br />
+
+                //Watch to see if there is a failure in any of the 3 deferreds <br />
+                grouped.fail(function () { <br />
+                &nbsp; writeMessage("the group failed"); <br />
+                }); <br />
+            </code>
+        </div>
+
+        <input id="resolve1" type="button" value="Resolve Deferred #1"/>
+        <div class="code">
+            <code class="prettyprint">
+                deferred1.resolve("Value 1");
+            </code>
+        </div>
+        
+        <input id="resolve2" type="button" value="Resolve Deferred #2"/>
+        <div class="code">
+            <code class="prettyprint">
+                deferred2.resolve("Value 2");
+            </code>
+        </div>
+
+        <input id="reject1" type="button" value="Reject Deferred #1"/>
+        <div class="code">
+            <code class="prettyprint">
+                deferred1.reject();
+            </code>
+        </div>
+
+        <input id="reject2" type="button" value="Reject Deferred #2"/>
+        <div class="code">
+            <code class="prettyprint">
+                deferred2.reject();
+            </code>
+        </div>
+
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script src="~/Scripts/Pages/When.js"></script>    
+}

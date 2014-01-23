@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Wrapping a Deferred";
+}
+
+@Html.ActionLink("Back to main page", "Index")
+
+<h2>Wrapping a Deferred</h2>
+
+<span>The .then method lets you wrap a Deferred with code of your own. </span>
+
+<div id="container">
+    <h4>Messages</h4>
+    <div id="messages" title="Messages sent by the code will apear here.">
+    </div>
+    
+    <!-- The "code" below is only for display.  To see the real code look in the js files -->
+
+    <div id="controls">
+        <input id="makeRequest" title="Make an AJAX request to the server and wire up event handlers" type="button" value="Make request with a wrapper around the promise" />
+        <div class="code">
+            <code class="prettyprint">
+                //Make an ajax request...this is a demo so we know it will take 10 seconds to respond <br />
+                // $.ajax returns a jQuery Promise. <br />
+                requestPromise = $.ajax({ <br />
+                &nbsp; url: '/home/DelayService', <br />
+                &nbsp; type: 'POST' <br />
+                }); <br />
+                <br />
+                //Attach an event handler to the promise <br />
+                requestPromise.done(function (data) {<br />
+                &nbsp; writeMessage('Original Promise - secret code is: ' + data.secretCode);<br />
+                });<br />
+                <br />
+                //Wrap the promise in another promise <br />
+                wrappedPromise = requestPromise.then(function(data) {<br />
+                &nbsp; data.secretCode = data.secretCode + 'secret';<br />
+                &nbsp; return data;<br />
+                });
+            </code>
+        </div>
+        <br />
+
+        <input id="attachToRequest" title="Wire up another event handler" type="button" value="Attach to Wrapped Promise" />
+        <div class="code">
+            <code class="prettyprint">
+                //Attach another handler when the button is clicked.  But this will only work if the request has been made already.  <br />
+                writeMessage('attach a different event handler to the wrapped Promise.'); <br />
+                wrappedPromise.done(function (data) {<br />
+                &nbsp; writeMessage('Wrapped Promise - secret code is: ' + data.secretCode);<br />
+                });<br />
+            </code>
+        </div>
+    </div>
+
+</div>
+
+@section scripts
+{
+
+    <script src="~/Scripts/Pages/Wrapping.js"></script>    
+}

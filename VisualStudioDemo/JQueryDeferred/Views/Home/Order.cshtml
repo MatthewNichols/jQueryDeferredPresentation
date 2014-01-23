@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Show Execution Order";
+}
+
+@Html.ActionLink("Back to main page", "Index")
+
+<h2>Creating and controlling a jQuery Deferred</h2>
+
+<span>A deferred can only be resolved (success) or rejected (failure).  Whichever is run first controls the outcome.</span>
+
+<div id="container">
+    <h4>Messages</h4>
+    <div id="messages" title="Messages sent by the code will apear here.">
+    
+    </div>
+    
+    <!-- The "code" below is only for display.  To see the real code look in the js files -->
+
+    <div id="controls" >
+        <div><b>Setup code</b></div>
+        <div class="code">
+            <code class="prettyprint">
+                //create a new deferred. <br />
+                var deferred = $.Deferred(); <br />
+      
+                //Attach a handler to done.  You can have any paramerters you want as long as resolve supplies them <br />
+                deferred.done(function(p1, p2) { <br />
+                &nbsp;writeMessage("Done  --  p1: " + p1 + " p2: " + p2); <br />
+                }); <br />
+                <br />
+                //Attach a handler to fail <br />
+                deferred.fail(function(p1, p2) { <br />
+                &nbsp;writeMessage("Fail  --  p1: " + p1 + " p2: " + p2); <br />
+                });<br />
+            </code>
+        </div>
+
+        <br />
+        <input id="callResolve" type="button" value="Call Resolve" /><br />
+        <div class="code">
+            <code class="prettyprint">
+                deferred.resolve('first value', 'second value');
+            </code>
+        </div>
+        <br />
+        
+        <input id="callReject" type="button" value="Call Reject" /><br />
+        <div class="code">
+            <code class="prettyprint">
+                deferred.resolve('first value', 'second value');
+            </code>
+        </div>
+    </div>
+
+</div>
+
+@section scripts
+{
+
+    <script src="~/Scripts/Pages/Order.js"></script>    
+}
